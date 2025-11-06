@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 환경 캠페인 영상 메이커</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    background: black;
+    color: white;
+  }
+  video {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: brightness(0.55);
+  }
+  audio {
+    display: none;
+  }
+  .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    backdrop-filter: blur(2px);
+  }
+  h1 {
+    font-size: 2.5em;
+    color: #00e676;
+    text-shadow: 0 0 15px #00e676;
+    margin-bottom: 20px;
+  }
+  input {
+    padding: 10px;
+    width: 250px;
+    border: 2px solid #00e676;
+    border-radius: 8px;
+    font-size: 1em;
+    background: transparent;
+    color: white;
+    text-align: center;
+  }
+  input::placeholder {
+    color: #ccc;
+  }
+  button {
+    margin-top: 15px;
+    background: #00e676;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #1de9b6;
+    transform: scale(1.05);
+  }
+  .caption {
+    margin-top: 40px;
+    font-size: 1.5em;
+    color: #aaffcc;
+    text-shadow: 0 0 10px #00ff99;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- 🌊 배경 영상 -->
+<video id="bgVideo" autoplay loop muted playsinline>
+  <source src="https://cdn.coverr.co/videos/coverr-waves-on-a-beach-6476/1080p.mp4" type="video/mp4">
+</video>
+
+<!-- 🎵 배경 음악 -->
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/03/07/audio_3d11f9dce9.mp3?filename=inspiring-calm-ambient-14112.mp3" type="audio/mp3">
+</audio>
+
+<!-- 🌿 오버레이 -->
+<div class="overlay">
+  <h1>AI 환경 캠페인 영상 메이커 🎬</h1>
+  <input type="text" id="topicInput" placeholder="환경 주제를 입력하세요 (예: 바다 오염)">
+  <button onclick="playCampaign()">AI로 영상 만들기</button>
+  <div class="caption" id="captionBox"></div>
+</div>
+
+<script>
+  const captions = [
+    "작은 실천이 지구를 지킵니다 🌱",
+    "지속 가능한 미래를 만들어가요 🌍",
+    "깨끗한 바다, 우리의 선택으로 💧",
+    "지구의 숨결을 함께 지켜요 🌿",
+    "환경은 우리의 또 다른 집입니다 🏡"
+  ];
+
+  const videos = {
+    "바다": "https://cdn.coverr.co/videos/coverr-waves-on-a-beach-6476/1080p.mp4",
+    "숲": "https://cdn.coverr.co/videos/coverr-green-forest-2143/1080p.mp4",
+    "기후": "https://cdn.coverr.co/videos/coverr-sunrise-over-mountains-8254/1080p.mp4",
+    "지구": "https://cdn.coverr.co/videos/coverr-earth-rotation-from-space-9464/1080p.mp4",
+    "플라스틱": "https://cdn.coverr.co/videos/coverr-plastic-bottles-recycling-1755/1080p.mp4"
+  };
+
+  function playCampaign() {
+    const topic = document.getElementById("topicInput").value.trim();
+    const captionBox = document.getElementById("captionBox");
+    const bgVideo = document.getElementById("bgVideo");
+    const bgMusic = document.getElementById("bgMusic");
+
+    if (!topic) {
+      captionBox.innerHTML = "먼저 주제를 입력해주세요!";
+      captionBox.style.opacity = 1;
+      return;
+    }
+
+    // 영상 변경
+    const key = Object.keys(videos).find(k => topic.includes(k)) || "지구";
+    bgVideo.src = videos[key];
+    bgVideo.play();
+
+    // 음악 재생
+    bgMusic.volume = 0.4;
+    bgMusic.play().catch(() => {
+      alert("음악 재생을 위해 화면을 한 번 터치해주세요 🎵");
+    });
+
+    // 자막 표시
+    const text = `${topic} 캠페인 영상 🎥<br>` + captions[Math.floor(Math.random() * captions.length)];
+    captionBox.innerHTML = text;
+    captionBox.style.opacity = 0;
+    captionBox.style.animation = "fadeIn 2s forwards";
+  }
+</script>
+
+</body>
+</html>
